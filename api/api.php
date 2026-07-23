@@ -71,7 +71,6 @@ function handleLogin($pdo, $input)
     unset($user['contrasena']);
     echo json_encode([
         'message' => 'Inicio de sesion exitoso',
-        'user' => $user,
         'proceder' => "si"
     ]);
 }
