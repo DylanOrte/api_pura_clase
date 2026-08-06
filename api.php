@@ -85,6 +85,7 @@ function handlePut($pdo, $input)
         'correo' => $input['correo'],
         'contrasena' => $input['contrasena'],
     ]);
+    //adsa
 
     echo json_encode(['message' => 'Post actualizado exitosamente']);
 }
