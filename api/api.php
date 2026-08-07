@@ -31,7 +31,7 @@ switch ($method) {
 
 function handleGet($pdo)
 {
-    $query = "SELECT * FROM usuarios";
+    $query = "SELECT * FROM llaves";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -78,13 +78,12 @@ function handleLogin($pdo, $input)
 
 function handlePut($pdo, $input)
 {
-    $query = "UPDATE usuarios SET nombre = :nombre, correo = :correo, contrasena = :contrasena WHERE idUsuarios = :idUsuarios";
+    $query = "UPDATE llaves SET estado = :estado, profesor = :profesor WHERE llave = :llave";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
-        'idUsuarios' => $input['idUsuarios'],
-        'nombre' => $input['nombre'],
-        'correo' => $input['correo'],
-        'contrasena' => $input['contrasena'],
+        'llave' => $input['llave'],
+        'estado' => $input['estado'],
+        'profesor' => $input['profesor'],
     ]);
 
     echo json_encode(['message' => 'Post actualizado exitosamente']);
@@ -92,9 +91,9 @@ function handlePut($pdo, $input)
 
 function handleDelete($pdo, $input)
 {
-    $query = "DELETE FROM usuarios WHERE idUsuarios = :idUsuarios";
+    $query = "DELETE FROM llaves WHERE llave = :llave";
     $stmt = $pdo->prepare($query);
-    $stmt->execute(['idUsuarios' => $input['idUsuarios'],]);
+    $stmt->execute(['llave' => $input['llave'],]);
 
     echo json_encode(['message' => 'Post eliminado exitosamente']);
 }
