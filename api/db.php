@@ -1,17 +1,17 @@
 <?php
-    $host = "prueba-321-puraclase-123123123.i.aivencloud.com";
+    $host = "puraclase-1111-user4041111-pc1.f.aivencloud.com";
     $user = "avnadmin";
-    $password = "AVNS_VpDydtgOXJtnVnejiTr";
+    $password = "AVNS_maiHMp-5fjrlAAsY0YH";
     $dbname = "defaultdb";
-    $port = "12049";
+    $port = "18090";
 
     // Con mysqli
     $mysqli = mysqli_init();
     // Use correct path to CA file and defined variables
-    $caFile = __DIR__ . '/ca.pem';
+    $caFile = __DIR__ . '/ca2.pem';
     if (!file_exists($caFile)) {
         // fallback to relative path
-        $caFile = __DIR__ . "\\ca.pem";
+        $caFile = __DIR__ . "\\ca2.pem";
     }
     mysqli_ssl_set($mysqli, NULL, NULL, $caFile, NULL, NULL);
     mysqli_real_connect($mysqli, $host, $user, $password, $dbname, $port, NULL, MYSQLI_CLIENT_SSL);
