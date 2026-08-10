@@ -46,7 +46,7 @@ function handlePost($pdo, $input)
         echo "Este correo ya esta registrado", $input['accion'];
         return;
     }
-    $query = "INSERT INTO usuarios (nombre, correo, contrasena) VALUES (:nombre, :correo, :contrasena)";
+    $query = "INSERT INTO BDPuraClase.usuarios (nombre, correo, contrasena) VALUES (:nombre, :correo, :contrasena)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         'nombre' => $input['nombre'],
@@ -58,7 +58,7 @@ function handlePost($pdo, $input)
 
 function handleLogin($pdo, $input)
 {
-    $stmt = $pdo->prepare("SELECT idUsuarios, nombre, correo, contrasena FROM usuarios WHERE correo = :correo");
+    $stmt = $pdo->prepare("SELECT idUsuarios, nombre, correo, contrasena FROM BDPuraClase.usuarios WHERE correo = :correo");
     $stmt->execute([':correo' => $input['correo']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -78,7 +78,7 @@ function handleLogin($pdo, $input)
 
 function handlePut($pdo, $input)
 {
-    $query = "UPDATE llaves SET estado = :estado, profesor = :profesor WHERE llave = :llave";
+    $query = "UPDATE BDPuraClase.llaves SET estado = :estado, profesor = :profesor WHERE llave = :llave";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         'llave' => $input['llave'],
@@ -91,7 +91,7 @@ function handlePut($pdo, $input)
 
 function handleDelete($pdo, $input)
 {
-    $query = "DELETE FROM llaves WHERE llave = :llave";
+    $query = "DELETE FROM BDPuraClase.llaves WHERE llave = :llave";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['llave' => $input['llave'],]);
 
