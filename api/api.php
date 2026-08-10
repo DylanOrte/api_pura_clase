@@ -31,7 +31,7 @@ switch ($method) {
 
 function handleGet($pdo)
 {
-    $query = "SELECT * FROM llaves";
+    $query = "SELECT * FROM BDPuraClase.llaves";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
