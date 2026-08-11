@@ -31,10 +31,18 @@ switch ($method) {
 
 function handleGet($pdo)
 {
-    $query = "SELECT * FROM BDPuraClase.llaves";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt1 = $pdo->prepare("SELECT * FROM BDPuraClase.llaves");
+    $stmt1->execute();
+    $llaves = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    
+    $stmt2 = $pdo->prepare("SELECT * FROM BDPuraClase.pabellones");
+    $stmt2->execute();
+    $pabellones = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    
+    $result = [
+        'llaves' => $llaves,
+        'pabellones' => $pabellones
+    ];
     echo json_encode($result);
 }
 
