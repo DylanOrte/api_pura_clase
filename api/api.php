@@ -39,11 +39,11 @@ function handleGet($pdo)
     $stmt2->execute();
     $pabellones = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     
-    $result = [
+    $response = [
         'llaves' => $llaves,
         'pabellones' => $pabellones
     ];
-    echo json_encode($result);
+    echo json_encode($response);
 }
 
 function handlePost($pdo, $input)

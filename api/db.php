@@ -5,12 +5,9 @@
     $dbname = "defaultdb";
     $port = "18090";
 
-    // Con mysqli
     $mysqli = mysqli_init();
-    // Use correct path to CA file and defined variables
     $caFile = __DIR__ . '/ca2.pem';
     if (!file_exists($caFile)) {
-        // fallback to relative path
         $caFile = __DIR__ . "\\ca2.pem";
     }
     mysqli_ssl_set($mysqli, NULL, NULL, $caFile, NULL, NULL);
