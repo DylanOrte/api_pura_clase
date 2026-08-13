@@ -48,7 +48,7 @@ function handleGet($pdo)
 
 function handlePost($pdo, $input)
 {
-    $check = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE correo = :correo");
+    $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.usuarios WHERE correo = :correo");
     $check->execute([':correo' => $input['correo']]);
     if ($check->fetchColumn() > 0) {
         echo "Este correo ya esta registrado", $input['accion'];
@@ -86,15 +86,19 @@ function handleLogin($pdo, $input)
 
 function handlePut($pdo, $input)
 {
-    $query = "UPDATE BDPuraClase.llaves SET estado = :estado, profesor = :profesor WHERE llave = :llave";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([
-        'llave' => $input['llave'],
-        'estado' => $input['estado'],
-        'profesor' => $input['profesor'],
-    ]);
-
-    echo json_encode(['message' => 'Post actualizado exitosamente']);
+    try {
+        $query = "UPDATE BDPuraClase.llaves SET estado = :estado, profesor = :profesor WHERE llave = :llave";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([
+            'llave' => intval($input['llave']),
+            'estado' => intval($input['estado']),
+            'profesor' => $input['profesor'],
+        ]);
+        echo ("Llave actualizada exitosamente");   
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Error al actualizar: ' . $e->getMessage()]);
+    }
 }
 
 function handleDelete($pdo, $input)
