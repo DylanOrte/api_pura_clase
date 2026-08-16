@@ -14,8 +14,8 @@ switch ($method) {
     case 'POST':
         if ($action == 'login') {
             handleLogin($pdo, $input);
-        } else {
-            handlePost($pdo, $input);
+        } else if ($action == 'anadirLlave') {
+            handleAnadirLlave($pdo, $input);
         }
         break;
     case 'PUT':
@@ -34,11 +34,11 @@ function handleGet($pdo)
     $stmt1 = $pdo->prepare("SELECT * FROM BDPuraClase.llaves");
     $stmt1->execute();
     $llaves = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $stmt2 = $pdo->prepare("SELECT * FROM BDPuraClase.pabellones");
     $stmt2->execute();
     $pabellones = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $response = [
         'llaves' => $llaves,
         'pabellones' => $pabellones
@@ -83,6 +83,23 @@ function handleLogin($pdo, $input)
     ]);
 }
 
+function handleAnadirLlave($pdo, $input)
+{
+    $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.llaves WHERE llave = :llave");
+    $check->execute([':llave' => $input['llave']]);
+    if ($check->fetchColumn() > 0) {
+        echo "Esta llave ya existe";
+        return;
+    }
+    $query = "INSERT INTO BDPuraClase.llaves (llave, pabellon) VALUES (:llave, :pabellon)";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([
+        'llave' => $input['llave'],
+        'pabellon' => $input['pabellon'],
+    ]);
+    echo 'Llave añadida exitosamente';
+}
+
 
 function handlePut($pdo, $input)
 {
@@ -94,7 +111,7 @@ function handlePut($pdo, $input)
             'estado' => intval($input['estado']),
             'profesor' => $input['profesor'],
         ]);
-        echo ("Llave actualizada exitosamente");   
+        echo ("Llave actualizada exitosamente");
     } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Error al actualizar: ' . $e->getMessage()]);
@@ -109,3 +126,4 @@ function handleDelete($pdo, $input)
 
     echo json_encode(['message' => 'Post eliminado exitosamente']);
 }
+?>
