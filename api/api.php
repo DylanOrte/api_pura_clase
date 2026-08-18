@@ -86,7 +86,7 @@ function handleLogin($pdo, $input)
 function handleAnadirLlave($pdo, $input)
 {
     $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.llaves WHERE llave = :llave");
-    $check->execute([':llave' => $input['llave']]);
+    $check->execute([':llave' => intVal($input['llave'])]);
     if ($check->fetchColumn() > 0) {
         echo "Esta llave ya existe";
         return;
@@ -94,10 +94,10 @@ function handleAnadirLlave($pdo, $input)
     $query = "INSERT INTO BDPuraClase.llaves (llave, pabellon) VALUES (:llave, :pabellon)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
-        'llave' => $input['llave'],
-        'pabellon' => $input['pabellon'],
+        'llave' => intVal($input['llave']),
+        'pabellon' => intVal($input['pabellon']),
     ]);
-    echo 'Llave añadida exitosamente';
+    echo "Llave añadida exitosamente";
 }
 
 
