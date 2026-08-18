@@ -16,13 +16,19 @@ switch ($method) {
             handleLogin($pdo, $input);
         } else if ($action == 'anadirLlave') {
             handleAnadirLlave($pdo, $input);
+        } else if ($action == 'anadirPabellon') {
+            handleAnadirPabellon($pdo, $input);
         }
         break;
     case 'PUT':
         handlePut($pdo, $input);
         break;
     case 'DELETE':
-        handleDelete($pdo, $input);
+        if ($action == 'eliminarLlave') {
+            handleDeleteLlave($pdo, $input);
+        } else if ($action == 'eliminarPabellon') {
+            handleDeletePabellon($pdo, $input);
+        }
         break;
     default:
         http_response_code(405);
@@ -88,7 +94,7 @@ function handleAnadirLlave($pdo, $input)
     $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.llaves WHERE llave = :llave");
     $check->execute([':llave' => intVal($input['llave'])]);
     if ($check->fetchColumn() > 0) {
-        echo "Esta llave ya existe";
+        echo json_encode("Esta llave ya existe");
         return;
     }
     $query = "INSERT INTO BDPuraClase.llaves (llave, pabellon) VALUES (:llave, :pabellon)";
@@ -97,7 +103,22 @@ function handleAnadirLlave($pdo, $input)
         'llave' => intVal($input['llave']),
         'pabellon' => intVal($input['pabellon']),
     ]);
-    echo "Llave añadida exitosamente";
+    echo json_encode("Llave agregada exitosamente");
+}
+
+function handleAnadirPabellon($pdo, $input) {
+    $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.pabellones WHERE idpabellones = :idpabellones");
+    $check->execute([':idpabellones' => intVal($input['idpabellones'])]);
+    if ($check->fetchColumn() > 0) {
+        echo json_encode("Este pabellon ya existe");
+        return;
+    }
+    $query = "INSERT INTO BDPuraClase.pabellones (idpabellones) VALUES (:idpabellones)";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([
+        'idpabellones' => intVal($input['idpabellones']),
+    ]);
+    echo json_encode("Pabellon agregado exitosamente");
 }
 
 
@@ -118,12 +139,21 @@ function handlePut($pdo, $input)
     }
 }
 
-function handleDelete($pdo, $input)
+function handleDeleteLlave($pdo, $input)
 {
     $query = "DELETE FROM BDPuraClase.llaves WHERE llave = :llave";
     $stmt = $pdo->prepare($query);
-    $stmt->execute(['llave' => $input['llave'],]);
+    $stmt->execute(['llave' => intVal($input['llave']),]);
 
-    echo json_encode(['message' => 'Post eliminado exitosamente']);
+    echo json_encode(['Llave eliminada exitosamente']);
+}
+
+function handleDeletePabellon($pdo, $input)
+{
+    $query = "DELETE FROM BDPuraClase.pabellones WHERE idpabellones = :idpabellones";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['idpabellones' => intVal($input['idpabellones']),]);
+
+    echo json_encode(['Pabellon eliminado exitosamente']);
 }
 ?>
