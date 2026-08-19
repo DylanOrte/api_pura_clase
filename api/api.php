@@ -18,6 +18,8 @@ switch ($method) {
             handleAnadirLlave($pdo, $input);
         } else if ($action == 'anadirPabellon') {
             handleAnadirPabellon($pdo, $input);
+        } else if ($action == 'crearCuenta') {
+            handleCrearUsuario($pdo, $input);
         }
         break;
     case 'PUT':
@@ -32,7 +34,7 @@ switch ($method) {
         break;
     default:
         http_response_code(405);
-        echo json_encode(['error' => 'Method not allowed']);
+        echo json_encode(['Method not allowed']);
 }
 
 function handleGet($pdo)
@@ -52,12 +54,12 @@ function handleGet($pdo)
     echo json_encode($response);
 }
 
-function handlePost($pdo, $input)
+function handleCrearUsuario($pdo, $input)
 {
     $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.usuarios WHERE correo = :correo");
     $check->execute([':correo' => $input['correo']]);
     if ($check->fetchColumn() > 0) {
-        echo "Este correo ya esta registrado", $input['accion'];
+        echo "Este correo ya esta registrado";
         return;
     }
     $query = "INSERT INTO BDPuraClase.usuarios (nombre, correo, contrasena) VALUES (:nombre, :correo, :contrasena)";
@@ -82,11 +84,7 @@ function handleLogin($pdo, $input)
         return;
     }
 
-    unset($user['contrasena']);
-    echo json_encode([
-        'message' => 'Inicio de sesion exitoso',
-        'proceder' => "si"
-    ]);
+    echo json_encode($user['nombre']);
 }
 
 function handleAnadirLlave($pdo, $input)
@@ -94,7 +92,7 @@ function handleAnadirLlave($pdo, $input)
     $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.llaves WHERE llave = :llave");
     $check->execute([':llave' => intVal($input['llave'])]);
     if ($check->fetchColumn() > 0) {
-        echo json_encode("Esta llave ya existe");
+        echo ("Esta llave ya existe");
         return;
     }
     $query = "INSERT INTO BDPuraClase.llaves (llave, pabellon) VALUES (:llave, :pabellon)";
@@ -103,14 +101,14 @@ function handleAnadirLlave($pdo, $input)
         'llave' => intVal($input['llave']),
         'pabellon' => intVal($input['pabellon']),
     ]);
-    echo json_encode("Llave agregada exitosamente");
+    echo ("Llave agregada exitosamente");
 }
 
 function handleAnadirPabellon($pdo, $input) {
     $check = $pdo->prepare("SELECT COUNT(*) FROM BDPuraClase.pabellones WHERE idpabellones = :idpabellones");
     $check->execute([':idpabellones' => intVal($input['idpabellones'])]);
     if ($check->fetchColumn() > 0) {
-        echo json_encode("Este pabellon ya existe");
+        echo ("Este pabellon ya existe");
         return;
     }
     $query = "INSERT INTO BDPuraClase.pabellones (idpabellones) VALUES (:idpabellones)";
@@ -118,7 +116,7 @@ function handleAnadirPabellon($pdo, $input) {
     $stmt->execute([
         'idpabellones' => intVal($input['idpabellones']),
     ]);
-    echo json_encode("Pabellon agregado exitosamente");
+    echo ("Pabellon agregado exitosamente");
 }
 
 
@@ -135,7 +133,7 @@ function handlePut($pdo, $input)
         echo ("Llave actualizada exitosamente");
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Error al actualizar: ' . $e->getMessage()]);
+        echo ('Error al actualizar la llave');
     }
 }
 
@@ -145,7 +143,7 @@ function handleDeleteLlave($pdo, $input)
     $stmt = $pdo->prepare($query);
     $stmt->execute(['llave' => intVal($input['llave']),]);
 
-    echo json_encode(['Llave eliminada exitosamente']);
+    echo ('Llave eliminada exitosamente');
 }
 
 function handleDeletePabellon($pdo, $input)
@@ -154,6 +152,6 @@ function handleDeletePabellon($pdo, $input)
     $stmt = $pdo->prepare($query);
     $stmt->execute(['idpabellones' => intVal($input['idpabellones']),]);
 
-    echo json_encode(['Pabellon eliminado exitosamente']);
+    echo ('Pabellon eliminado exitosamente');
 }
 ?>
